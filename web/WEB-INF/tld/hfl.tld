@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+    version="2.0">
+    
+  <description>自定义标签库</description>
+  <display-name>hfl fn</display-name>
+  <tlib-version>1.0</tlib-version>
+  <short-name>hfl</short-name>
+  <uri></uri>   <!--不想给别人使用就填 空-->
+
+
+    <function>
+        <description>日期格式化 </description>
+        <name>dateFormat</name> <!--来自那个方法-->
+        <function-class>com.hfl.tag.TmFuntion</function-class>  <!--来自哪个类-->
+        <function-signature>java.lang.String dateFormat(java.util.Date,java.lang.String)</function-signature>
+        <example>
+            ${hfl:dateFormat(date,'yyyy-MM-dd HH:mm:ss')}
+            ${hfl:dateFormat(date,'yyyy年MM月dd日 HH:mm:ss')}
+            ${hfl:dateFormat(date,'HH:mm:ss')}
+        </example>
+    </function>
+
+    <function>
+        <description>获取英文字母 </description>
+        <name>getChar</name> <!--来自那个方法-->
+        <function-class>com.hfl.tag.TmFuntion</function-class>  <!--来自哪个类-->
+        <function-signature>java.lang.String getChar(int)</function-signature>
+        <example>
+            ${hfl:getChar(1)} ==A
+            ${hfl:getChar(2)} ==B
+            ${hfl:getChar(3)} ==C
+            ${hfl:getChar(4)} ==D
+        </example>
+    </function>
+
+</taglib>

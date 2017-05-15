@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hfl.dao.admin.IAdminBlogDao" >
+
+
+    <!-- 查询所有的博客信息 -->
+    <select id="findBlogs" resultType="java.util.HashMap" parameterType="Params">
+        select
+            b.id,
+            b.title,
+            c.name,
+            b.description,
+            b.catagory_id as catagoryId,
+            b.img,
+            b.create_time as createTime,
+            b.update_time as updateTime,
+            b.musiclink,
+            b.musictor,
+            b.musictitle,
+            b.musicsize,
+            b.musictime,
+            b.hits,
+            b.comments,
+            b.status,
+            b.is_delete,
+            b.is_top as isTop,
+            b.user_id as userId,
+            u.username,
+            u.header_pic  as  headerPic
+        FROM
+            hfl_blog b
+        LEFT JOIN hfl_category c ON c.id = b.catagory_id
+        LEFT JOIN hfl_user u ON u.id = b.user_id
+
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(filterId)">
+                and b.id != #{filterId}
+            </if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(status)">
+                and b.status = #{status}
+            </if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(isDelete)">
+                and b.is_delete = #{isDelete}
+            </if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(isTop)">
+                and b.is_top = #{isTop}
+            </if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(typeId)">
+                and c.id = #{typeId}
+            </if>
+        </trim>
+        ORDER BY b.CREATE_time desc
+        limit #{pageNo} , #{pageSize}
+    </select>
+
+
+    <!--查询博客总数-->
+    <select id="countBlogs" resultType="int" parameterType="Params">
+        select
+            count(1)
+        FROM
+            hfl_blog b
+        LEFT JOIN hfl_category c ON c.id = b.catagory_id
+        LEFT JOIN hfl_user u ON u.id = b.user_id
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(filterId)">
+                and b.id != #{filterId}
+            </if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(status)">
+                and b.status = #{status}
+            </if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(isDelete)">
+                and b.is_delete = #{isDelete}
+            </if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(isTop)">
+                and b.is_top = #{isTop}
+            </if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(typeId)">
+                and c.id = #{typeId}
+            </if>
+        </trim>
+    </select>
+
+
+
+
+    <!-- 查询某个博客信息 -->
+    <select id="getBlog" resultType="java.util.HashMap">
+        select
+            b.id,
+            b.title,
+            c.name,
+            b.description,
+            b.catagory_id as catagoryId,
+            b.img,
+            b.create_time as createTime,
+            b.update_time as updateTime,
+            b.musiclink,
+            b.musictor,
+            b.musictitle,
+            b.musicsize,
+            b.musictime,
+            b.hits,
+            b.comments,
+            b.status,
+            b.is_delete,
+            b.is_top as isTop,
+            b.user_id as userId,
+            u.username,
+            u.header_pic  as  headerPic
+        FROM
+            hfl_blog b
+        LEFT JOIN hfl_category c ON c.id = b.catagory_id
+        LEFT JOIN hfl_user u ON u.id = b.user_id
+        WHERE  b.id = #{id}
+
+    </select>
+
+
+    <!-- 保存新增博客信息 -->
+    <insert id="saveBlog"  parameterType="Blog" useGeneratedKeys="true" keyProperty="id">
+        insert into hfl_blog(
+            title,
+            description,
+            catagory_id,
+            img,
+            musiclink,
+            musictor,
+            musictitle,
+            musicsize,
+            musictime,
+            hits,
+            comments,
+            status,
+            is_delete,
+            is_top,
+            user_id
+        )values(
+            #{title},
+            #{description},
+            #{categoryId},
+            #{img},
+            #{musiclink},
+            #{musictor},
+            #{musictitle},
+            #{musicsize},
+            #{musictime},
+            #{hits},
+            #{comments},
+            #{status},
+            #{isDelete},
+            #{isTop},
+            #{userId}
+        )
+
+    </insert>
+
+    <update id="updateBlog" parameterType="Blog">
+        UPDATE  hfl_blog
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(title)">title =#{title},</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(description)">description=#{description},</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(updateTime)">update_time=now(),</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(userId)">user_id=#{userId},</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(isDelete)">is_delete=#{isDelete},</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(isTop)">is_top=#{isTop},</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(status)">status=#{status},</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(hits)">hits=#{hits},</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(comments)">comments=#{comments},</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(img)">img=#{img},</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(categoryId)">catagory_id=#{categoryId},</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(musiclink)">musiclink =#{musiclink},</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(musictor)">musictor =#{musictor},</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(musictitle)">musictitle =#{musictitle},</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(musicsize)">musicsize =#{musicsize},</if>
+            <if test="@com.hfl.util.TmStringUtils@isNotEmpty(musictime)">musictime =#{musictime},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+</mapper>
